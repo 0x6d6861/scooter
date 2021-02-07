@@ -316,7 +316,7 @@ module.exports = {
             };
             return {
                 operation: operations[values[0]],
-                status: codes[values[1]]
+                status: statuses[values[1]]
             }
         }
     },
