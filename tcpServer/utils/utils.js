@@ -36,16 +36,14 @@ function sendCommand({DEVICE_ID = '123456789123456', XX = 'R0', DDDD = '0,20,123
         if(!DDDD) {
             finalCommand = `*SCOS,${vendor},${DEVICE_ID},${XX}#\n`;
         }
+        console.log("SERVER_COMAND => ", finalCommand);
         let command = Buffer.concat([Buffer.from('FFFF', 'hex'), Buffer.from(finalCommand, 'utf8')]);
         socket.write(command, () => {
-            if(DDDD || XX === 'S6' || XX === 'D0' || XX === 'G0') {
-                socket.on('data', function(data) {
-                    let parsed = describeCommand({command: data.toString('utf8')});
-                    // console.log("PARSED", parsed)
-                    return resolve(parsed)
-                })
-            }
-            return resolve({success: true});
+            socket.on('data', function(data) {
+                let parsed = describeCommand({command: data.toString('utf8')});
+                // console.log("PARSED", parsed)
+                return resolve(parsed)
+            })
         })
     })
 }

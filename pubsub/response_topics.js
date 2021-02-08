@@ -1,4 +1,4 @@
-module.export = {
+module.exports = {
     'Q0': {
         topic: 'lobby'
     },

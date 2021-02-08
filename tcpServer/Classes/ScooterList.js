@@ -1,32 +1,36 @@
 const {Scooter} = require("./Scooter");
 
-class ScooterList {
-    constructor() {
-        this.list = new Map();
+function ScooterList() {
+
+    const list = new Map();
+
+
+    function has(DEVICE_ID) {
+        return list.has(DEVICE_ID);
     }
 
-    has(DEVICE_ID) {
-        return this.list.has(DEVICE_ID);
+    function get(DEVICE_ID) {
+        return list.get(DEVICE_ID);
     }
 
-    get(DEVICE_ID) {
-        return this.list.get(DEVICE_ID);
+    function remove(DEVICE_ID) {
+        return list.delete(DEVICE_ID);
     }
 
-    delete(DEVICE_ID) {
-        return this.list.delete(DEVICE_ID);
+    function add(scooter = new Scooter()) {
+        return list.set(scooter.DEVICE_ID, scooter);
     }
 
-    add(scooter = new Scooter()) {
-        return this.list.set(scooter.DEVICE_ID, scooter);
+    function clear(){
+        return list.clear()
     }
 
-    clear(){
-        return this.list.clear()
+    function describe(){
+        console.log(list.values());
     }
 
-    describe(){
-        console.log(this.list.values());
+    return {
+        has, get, remove, clear, describe, add
     }
 }
 

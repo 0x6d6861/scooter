@@ -8,36 +8,53 @@ const {describeCommand} = require('./utils/utils')
 const server = net.createServer();
 const {Scooter} = require('./Classes/Scooter');
 const {ScooterList} = require('./Classes/ScooterList');
-const pubsub = require('../pubsub/redis');
-
-server.listen(port, host, () => {
-    // TODO: publish tcp server online with host and port
-    pubsub.publish("server/status", JSON.stringify({
-        status: 'online',
-        host,
-        port
-    }));
-    console.log('TCP Server is running on port ' + port + '.');
-});
+const {publisher, subscriber} = require('../pubsub/redis');
+const responseTopics = require('../pubsub/response_topics');
 
 let scooterList = new ScooterList();
 let scooter = null;
 
+///////////////
+const actionTopics = require('../server/actionTopics')(scooterList);
+const actionTopicList = Object.keys(actionTopics);
+actionTopicList.forEach(topic => {
+    subscriber.subscribe(topic);
+})
+subscriber.on("message", function (channel, message) {
+
+    // registering all the actions
+    if(actionTopicList.includes(channel)){
+        const device = JSON.parse(message)
+        actionTopics[channel].method(device.DEVICE_ID, device)
+    }
+});
+//////////////
+
+server.listen(port, host, () => {
+    // TODO: publish tcp server online with host and port
+    publisher.publish("server/status", JSON.stringify({
+        status: 'online',
+        host,
+        port
+    }));
+
+
+    console.log('TCP Server is running on port ' + port + '.');
+});
+
 server.on('connection', function(sock) {
     log(chalk.black.bgGreen.bold(' CONNECTED ') + ' ' + sock.remoteAddress + ' ' + sock.remotePort);
-    // console.log(sock);
-    //sockets.push(sock);
     sock.on('data', function(data) {
         try {
-            //console.log('DATA ' + sock.remoteAddress + ': ' + data);
+            console.log('DATA ' + sock.remoteAddress + ': ' + data.toString('utf-8').slice(0, -1));
             let parsed = describeCommand({command: data.toString('utf-8')});
+            console.log("Response => ", JSON.stringify(parsed.parsed));
 
             if(parsed.command.XX){
 
                 // TODO: confirm the response when serve online then offline then online, this might be unnecessary
-                // if(parsed.command.XX === 'Q0' || parsed.command.XX === 'L0' || parsed.command.XX === 'L1')
 
-                if(parsed.command.XX === 'Q0') {
+                if(parsed.command.XX === 'Q0' || parsed.command.XX === 'L0' || parsed.command.XX === 'L1') {
                     if(!scooterList.has(parsed.command.DEVICE_ID)){
                         scooter = new Scooter(parsed.command.DEVICE_ID, sock)
                         // This has been set in the Scooter Constructor
@@ -48,17 +65,25 @@ server.on('connection', function(sock) {
                         // TODO: this might be unnecessary because of the onclose event
                         scooter.updateSocket(sock);
                     }
-                    // scooter.initialize();
-                    // TODO: publish a scooter event 'connected', with ip and all the goodies
-                    pubsub.publish("scooter/status", JSON.stringify({
-                        status: 'online',
-                        DEVICE_ID: sock.DEVICE_ID,
-                        ip: sock.remoteAddress,
-                        port: sock.remotePort
+
+                    if((parsed.command.XX === 'L0' || parsed.command.XX === 'L1')) {
+                        // console.log('STATE => ', parsed.command.XX)
+                        scooter.initialize({state: parsed.command.XX}).then(resp => {
+                            log(chalk.black.bgGreen.bold(` ${scooter.DEVICE_ID} `) + ' ' + chalk.green(' READY!! '));
+                        })
+                    } else {
+                        if(parsed.command.XX !== 'Q0') {
+                            console.log("Hello")
+                            log(chalk.black.bgGreen.bold(` ${scooter.DEVICE_ID} `) + ' ' + chalk.green(' READY!! '));
+                        }
+                    }
+
+                } else {
+                    // console.log("TOPIC => ", responseTopics[parsed.command.XX])
+                    publisher.publish(`response/scooter/${responseTopics[parsed.command.XX].topic}`, JSON.stringify({
+                        DEVICE_ID: scooter.DEVICE_ID,
+                        data: parsed.parsed
                     }));
-
-                    // log(chalk.black.bgYellow.bold(` ${scooter.DEVICE_ID} `) + ' ' + chalk.green('READY'));
-
                 }
 
                 // TODO: publish all the other events
@@ -77,13 +102,13 @@ server.on('connection', function(sock) {
         log(chalk.black.bgRed.bold(' CLOSED ') + ' ' + sock.remoteAddress + ' ' + sock.remotePort);
         if(sock.DEVICE_ID && scooterList.has(sock.DEVICE_ID)){
             // TODO: publish a scooter offline
-            pubsub.publish("scooter/status", JSON.stringify({
+            publisher.publish("scooter/status", JSON.stringify({
                 status: 'offline',
                 DEVICE_ID: sock.DEVICE_ID,
                 ip: sock.remoteAddress,
                 port: sock.remotePort
             }));
-            scooterList.delete(sock.DEVICE_ID); // Deleted the scooter
+            scooterList.remove(sock.DEVICE_ID); // Deleted the scooter
         }
     });
 });

@@ -1,4 +1,8 @@
+const chalk = require('chalk');
+const log = console.log;
+
 const moment = require('moment');
+const {describeCommand} = require("../utils/utils");
 const {sendCommand} = require('../utils/utils');
 
 function Scooter(DEVICE_ID, socket) {
@@ -6,14 +10,19 @@ function Scooter(DEVICE_ID, socket) {
     socket.DEVICE_ID = DEVICE_ID;
 
         // THIS IS DANGEROUS
-        /*this.socket.on('data', (data) => {
+        socket.on('data', (data) => {
             let parsed = describeCommand({command: data.toString('utf-8')});
-            if((parsed.command.XX === 'L0' || parsed.command.XX === 'L1') && parsed.parsed.status !== 'SUCCESS') {
+            /*if((parsed.command.XX === 'L0' || parsed.command.XX === 'L1') && parsed.parsed.status !== 'SUCCESS') {
                 this.initialize(parsed.command.XX).then(resp => {
-                    // console.log("READY!")
+                    log(chalk.black.bgGreen.bold(` ${DEVICE_ID} `) + ' ' + chalk.green(' READY!! '));
                 })
-            }
-        });*/
+            } else {
+                if(parsed.command.XX !== 'Q0') {
+                    log(chalk.black.bgGreen.bold(` ${DEVICE_ID} `) + ' ' + chalk.green(' READY!! '));
+                }
+            }*/
+
+            });
 
     function _sendCommand({XX, DDDD}) {
         return sendCommand({
@@ -78,7 +87,7 @@ function Scooter(DEVICE_ID, socket) {
                          DDDD: null
                      }).then((data) => {
                          // TODO: find the response and decide
-                         console.log("LOCK STATUS", data)
+                         // console.log("LOCK STATUS", data)
                          resolve({DEVICE_ID: DEVICE_ID, STATUS: state === 'L0' ? 'UNLOCKED' : 'LOCKED', reason: responseLock})
                      })
                  } else {
@@ -381,7 +390,9 @@ function Scooter(DEVICE_ID, socket) {
         unlockCableComponent,
         unlockWheelComponent,
         unlockScooter,
-        updateSocket
+        updateSocket,
+        DEVICE_ID,
+        socket
     }
 
 }

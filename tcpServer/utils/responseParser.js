@@ -1,3 +1,10 @@
+function convertW84(value){
+    let values = value.split('.');
+    let degree = parseInt(Number(values[0]) / 60)
+    let sec = parseInt(Number(values[0]) % 60)
+    return `${degree} ${sec}.${values[1]}`
+}
+
 module.exports = {
     'Q0': {
         description: 'Check-in command, the lock will be sent first after each connection to the server, (including reconnection after disconnection',
@@ -191,7 +198,7 @@ module.exports = {
                     lat: `${values[4]}${values[3]}`,
                     lng:`${values[6]}${values[5]}`,
                     alt: values[10],
-                    value: `${values[4]} ${values[3]} ${values[6]} ${values[5]} ${values[10]}`,
+                    value: `${convertW84(values[3])}${values[4]} ${convertW84(values[5])}${values[6]} ${values[10]}`,
                     format: 'WGS84'
                 },
                 satellites: values[7],
