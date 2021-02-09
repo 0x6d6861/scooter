@@ -40,6 +40,28 @@ module.exports = function (scooterList) {
                 }
 
             }
+        },
+        'action/scooter/beep': {
+            method: function (DEVICE_ID, {action = 'HOLD'}) {
+                const selectedScooter = scooterList.get(DEVICE_ID);
+
+                switch (action) {
+                    case "HOLD":
+                        selectedScooter.holdScooter();
+                        break;
+                    case "FIND":
+                        selectedScooter.findScooter();
+                        break;
+                    case "VOICE_ON":
+                        selectedScooter.findScooter();
+                        break;
+                    case "VOICE_OFF":
+                        selectedScooter.findScooter();
+                        break;
+
+                }
+
+            }
         }
     }
 }

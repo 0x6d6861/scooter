@@ -15,12 +15,20 @@ publisher.publish('action/scooter/lock', JSON.stringify({
     state: 'LOCK'
 }));
 
+// *SCOS,OM,861123050543063,W0,0#
 /*publisher.publish('action/scooter/light', JSON.stringify({
     user: '1',
     DEVICE_ID: '861123050543063',
     taillight: '0',
     headlight: '0'
 }));*/
+
+/*publisher.publish('action/scooter/beep', JSON.stringify({
+    user: '1',
+    DEVICE_ID: '861123050543063',
+    action: 'HOLD'
+}));*/
+
 
 // process.exit(0);
 
