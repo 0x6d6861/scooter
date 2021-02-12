@@ -1,8 +1,24 @@
-function convertW84(value){
+function convertW84(value, hemisphere){
     let values = value.split('.');
-    let degree = parseInt(Number(values[0]) / 60)
-    let sec = parseInt(Number(values[0]) % 60)
-    return `${degree} ${sec}.${values[1]}`
+    let degree = Number(values[0].slice(0, values[0].length - 2));
+    let sec = Number(values[0].slice(values[0].length - 2));
+    let _d = (Number(`${sec}.${values[1]}`) / 60) + degree;
+    return `${hemisphere === 'S' || hemisphere === 'W' ? '-' : ''}${_d}`
+}
+
+function ConvertDMSToDEG(dms) {
+    var dms_Array = dms.split(/[^\d\w\.]+/);
+    var degrees = dms_Array[0];
+    var minutes = dms_Array[1];
+    var seconds = dms_Array[2];
+    var direction = dms_Array[3];
+
+    var deg = (Number(degrees) + Number(minutes)/60 + Number(seconds)/3600).toFixed(6);
+
+    if (direction == "S" || direction == "W") {
+        deg = deg * -1;
+    } // Don't do anything for N or E
+    return deg;
 }
 
 module.exports = {
@@ -195,10 +211,10 @@ module.exports = {
                 time: `${values[1]}_hhmmss`,
                 positioning_status: positioning[values[2]],
                 location: {
-                    lat: `${values[4]}${values[3]}`,
-                    lng:`${values[6]}${values[5]}`,
+                    lat: `${values[4]} ${values[3]}`,
+                    lng:`${values[6]} ${values[5]}`,
                     alt: values[10],
-                    value: `${convertW84(values[3])}${values[4]} ${convertW84(values[5])}${values[6]} ${values[10]}`,
+                    value: `${convertW84(values[3], values[4])},${convertW84(values[5], values[6])}`,
                     format: 'WGS84'
                 },
                 satellites: values[7],

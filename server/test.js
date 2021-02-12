@@ -1,4 +1,4 @@
-var {publisher, subscriber} = require('../pubsub/redis');
+var {publisher, subscriber} = require('../tcpServer/pubsub/redis');
 
 subscriber.subscribe("server/status");
 subscriber.subscribe("scooter/status");
@@ -9,11 +9,24 @@ subscriber.subscribe("response/scooter/position");
 
 let devices = {};
 
-publisher.publish('action/scooter/lock', JSON.stringify({
+// TODO: know when the command was successful
+/*publisher.publish('action/scooter/lock', JSON.stringify({
     user: '1',
     DEVICE_ID: '861123050543063',
     state: 'LOCK'
-}));
+}));*/
+
+/*publisher.publish('action/scooter/trackinginterval', JSON.stringify({
+    user: '1',
+    DEVICE_ID: '861123050543063',
+    seconds: '10'
+}));*/
+
+/*publisher.publish('action/scooter/alarm', JSON.stringify({
+    user: '1',
+    DEVICE_ID: '861123050543063',
+    state: '0'
+}));*/
 
 // *SCOS,OM,861123050543063,W0,0#
 /*publisher.publish('action/scooter/light', JSON.stringify({
@@ -23,10 +36,14 @@ publisher.publish('action/scooter/lock', JSON.stringify({
     headlight: '0'
 }));*/
 
-/*publisher.publish('action/scooter/beep', JSON.stringify({
+publisher.publish('action/scooter/beep', JSON.stringify({
     user: '1',
     DEVICE_ID: '861123050543063',
-    action: 'HOLD'
+    action: 'FIND'
+}));
+
+/*publisher.publish('action/scooter/position', JSON.stringify({
+    DEVICE_ID: '861123050543063'
 }));*/
 
 

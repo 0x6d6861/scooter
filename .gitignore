@@ -116,3 +116,6 @@ dist
 .pnp.*
 
 .idea
+
+tcpServer/node_modules/
+server/node_modules/

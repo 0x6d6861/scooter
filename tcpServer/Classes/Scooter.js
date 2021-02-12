@@ -187,7 +187,7 @@ function Scooter(DEVICE_ID, socket) {
      function switchOffAlarm(){
         // *SCOS,OM,123456789123456,W0#
         return _sendCommand({
-            XX: 'WO',
+            XX: 'W0',
             DDDD: null
         });
      }
@@ -201,7 +201,7 @@ function Scooter(DEVICE_ID, socket) {
         // *SCOS,OM,123456789123456,V0,1#
 
         return _sendCommand({
-            XX: 'VO',
+            XX: 'V0',
             DDDD: state
         });
     }
@@ -232,6 +232,7 @@ function Scooter(DEVICE_ID, socket) {
 
     function setTrackingInterval({interval = '60'}){
         // *SCOS,OM,123456789123456,D1,60#
+        // *SCOS,OM,861123050543063,D1,5#
         return _sendCommand({
             XX: 'D1',
             DDDD: interval

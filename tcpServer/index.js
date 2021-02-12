@@ -8,14 +8,14 @@ const {describeCommand} = require('./utils/utils')
 const server = net.createServer();
 const {Scooter} = require('./Classes/Scooter');
 const {ScooterList} = require('./Classes/ScooterList');
-const {publisher, subscriber} = require('../pubsub/redis');
-const responseTopics = require('../pubsub/response_topics');
+const {publisher, subscriber} = require('./pubsub/redis');
+const responseTopics = require('./pubsub/response_topics');
 
 let scooterList = new ScooterList();
 let scooter = null;
 
 ///////////////
-const actionTopics = require('../server/actionTopics')(scooterList);
+const actionTopics = require('./utils/actionTopics')(scooterList);
 const actionTopicList = Object.keys(actionTopics);
 actionTopicList.forEach(topic => {
     subscriber.subscribe(topic);

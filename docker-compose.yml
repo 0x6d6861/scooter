@@ -2,9 +2,10 @@ version: "3.2"
 services:
   redis:
     image: "redis:alpine"
+    container_name: redis
     command: redis-server --requirepass sOmE_sEcUrE_pAsS
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - $PWD/redis/redis-data:/var/lib/redis
       - $PWD/redis/redis.conf:/usr/local/etc/redis/redis.conf
@@ -14,8 +15,63 @@ services:
       node_net:
         ipv4_address: 172.28.1.4
 
+  mongo:
+    container_name: mongo
+    image: 'mongo:latest'
+    environment:
+      - MONGO_DATA_DIR=/var/lib/mongo
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - $PWD/mongo:/var/lib/mongo
+    ports:
+      - '27017:27017'
+    networks:
+      node_net:
+        ipv4_address: 172.28.1.5
+
+  tcpserver:
+    container_name: tcpserver
+    build:
+      context: ./tcpServer/
+#      target: production
+    volumes:
+      - "./tcpServer/:/src/"
+    command: npm run start:production
+    ports:
+      - "7070:7070"
+    depends_on:
+      - redis
+    environment:
+      NODE_ENV: production
+    networks:
+      out_network:
+      node_net:
+          ipv4_address: 172.28.1.6
+
+  web:
+    container_name: web
+    build:
+      context: ./server/
+#      target: dev
+    volumes:
+      - "./server/:/src"
+    command: npm run start:dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+      - tcpserver
+    environment:
+      NODE_ENV: production
+      DEBUG: nodejs-docker-express:*
+    networks:
+      node_net:
+        ipv4_address: 172.28.1.7
+
 # networking for the Redis container
 networks:
+  out_network:
+    driver: bridge
   node_net:
     ipam:
       driver: default

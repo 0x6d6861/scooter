@@ -1,0 +1,21 @@
+{
+  "name": "tcpServer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:production": "node index.js",
+    "start:dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "http": "0.0.1-security",
+    "moment": "^2.29.1",
+    "node-gyp-build": "^4.2.3",
+    "redis": "^3.0.2"
+  }
+}
