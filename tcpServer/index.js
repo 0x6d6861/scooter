@@ -1,9 +1,8 @@
 const chalk = require('chalk');
 const log = console.log;
 const net = require('net');
-const moment = require('moment');
-const port = 7070;
-const host = '127.0.0.1';
+const port = 7070; // TODO: get these from the environment
+const host = '0.0.0.0'; // very important
 const {describeCommand} = require('./utils/utils')
 const server = net.createServer();
 const {Scooter} = require('./Classes/Scooter');
@@ -73,7 +72,7 @@ server.on('connection', function(sock) {
                         })
                     } else {
                         if(parsed.command.XX !== 'Q0') {
-                            console.log("Hello")
+                            // console.log("Hello")
                             log(chalk.black.bgGreen.bold(` ${scooter.DEVICE_ID} `) + ' ' + chalk.green(' READY!! '));
                         }
                     }
