@@ -47,7 +47,7 @@ server.on('connection', function(sock) {
         try {
             console.log('DATA ' + sock.remoteAddress + ': ' + data.toString('utf-8').slice(0, -1));
             let parsed = describeCommand({command: data.toString('utf-8')});
-            console.log("Response => ", JSON.stringify(parsed.parsed));
+            console.log("Response => ", JSON.stringify(parsed.parsed, null, 2));
 
             if(parsed.command.XX){
 
@@ -81,7 +81,7 @@ server.on('connection', function(sock) {
                     // console.log("TOPIC => ", responseTopics[parsed.command.XX])
                     publisher.publish(`response/scooter/${responseTopics[parsed.command.XX].topic}`, JSON.stringify({
                         DEVICE_ID: scooter.DEVICE_ID,
-                        data: parsed.parsed
+                        data: parsed
                     }));
                 }
 
