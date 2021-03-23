@@ -1,4 +1,4 @@
-var {publisher, subscriber} = require('../tcpServer/pubsub/redis');
+var {publisher, subscriber} = require('./redis');
 
 subscriber.subscribe("server/status");
 subscriber.subscribe("scooter/status");
@@ -66,3 +66,5 @@ subscriber.on("message", function (channel, message) {
     }
     console.log("DEVICES =>", devices);
 });
+
+module.exports = {subscriber, publisher}
