@@ -54,7 +54,7 @@ let devices = {};
 
 // process.exit(0);
 
-subscriber.on("message", function (channel, message) {
+/*subscriber.on("message", function (channel, message) {
     let state = JSON.parse(message);
     if(!devices[state.DEVICE_ID]) {
         devices[state.DEVICE_ID] = {}
@@ -65,4 +65,4 @@ subscriber.on("message", function (channel, message) {
         ...state.data.parsed
     }
     console.log("DEVICES =>", devices);
-});
+});*/
