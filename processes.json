@@ -1,0 +1,24 @@
+{
+  "apps": [
+    {
+      "name": "tcp_server",
+      "script": "./tcpServer/index.js",
+      "instances": "1",
+      "exec_mode": "cluster",
+      "error_file": "./logs/err.log",
+      "out_file": "./logs/out.log",
+      "log_file": "./logs/combined.log",
+      "time": true
+    },
+    {
+      "name": "web_server",
+      "script": "./server/bin/www",
+      "instances": "max",
+      "exec_mode": "cluster",
+      "error_file": "./logs/err.log",
+      "out_file": "./logs/out.log",
+      "log_file": "./logs/combined.log",
+      "time": true
+    }
+  ]
+}
