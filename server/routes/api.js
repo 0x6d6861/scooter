@@ -21,17 +21,17 @@ router.post('/command', async function(req, res, next) {
     if(commands.includes(command)){
 
         let device = await DeviceIDByQR({qr});
-        publisher.publish('action/scooter/alarm', JSON.stringify({
+        /*publisher.publish('action/scooter/alarm', JSON.stringify({
             user: '1',
             DEVICE_ID: device,
             state: '0'
-        }));
+        }));*/
 
         // TODO: get userID from the jwt
         publisher.publish('action/scooter/lock', JSON.stringify({
             user: '1',
             DEVICE_ID: device,
-            state: 'LOCK'
+            state: command
         }));
         res.json({
             success: true,
