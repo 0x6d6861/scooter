@@ -119,4 +119,3 @@ dist
 
 tcpServer/node_modules/
 server/node_modules/
-/server/database.sqlite
