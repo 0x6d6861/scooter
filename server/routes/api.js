@@ -5,7 +5,7 @@ const {DeviceIDByQR} = require("../database/repositories/ScooterRepo");
 var router = express.Router();
 
 
-router.get('/', async function (req, res, next) {
+router.get('/devices', async function (req, res, next) {
     let devices = await GetAllDevices()
     res.json({
         success: true,
