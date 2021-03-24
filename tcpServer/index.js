@@ -80,13 +80,18 @@ server.on('connection', function(sock) {
 
                 } else {
                     // console.log("TOPIC => ", responseTopics[parsed.command.XX])
-                    publisher.publish(`response/scooter/${responseTopics[parsed.command.XX].topic}`, JSON.stringify({
+                    /*publisher.publish(`response/scooter/${responseTopics[parsed.command.XX].topic}`, JSON.stringify({
                         DEVICE_ID: scooter.DEVICE_ID,
                         data: parsed
-                    }));
+                    }));*/
                 }
 
+
                 // TODO: publish all the other events
+                publisher.publish(`response/scooter/${responseTopics[parsed.command.XX].topic}`, JSON.stringify({
+                    DEVICE_ID: scooter.DEVICE_ID,
+                    data: parsed
+                }));
 
             } else {
                 sock.destroy();
