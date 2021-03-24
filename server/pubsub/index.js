@@ -1,9 +1,11 @@
+const {AddDeviceByIMEI} = require("../database/repositories/ScooterRepo");
 var {publisher, subscriber} = require('./redis');
 
 subscriber.subscribe("server/status");
 subscriber.subscribe("scooter/status");
 
 //
+subscriber.subscribe("response/scooter/lobby");
 subscriber.subscribe("response/scooter/heartbeat");
 subscriber.subscribe("response/scooter/position");
 subscriber.subscribe("response/scooter/tracking");
@@ -56,6 +58,13 @@ let devices = {};
 
 subscriber.on("message", function (channel, message) {
     let state = JSON.parse(message);
+
+    if(channel === 'response/scooter/lobby') {
+        AddDeviceByIMEI({imei: state.DEVICE_ID}).then(() => {
+            console.log("DEVICE ADDED")
+        })
+    }
+
     if(!devices[state.DEVICE_ID]) {
         devices[state.DEVICE_ID] = {}
     }

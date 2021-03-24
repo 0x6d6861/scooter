@@ -1,7 +1,17 @@
 var express = require('express');
+const {GetAllDevices} = require("../database/repositories/ScooterRepo");
 const {publisher} = require("../pubsub");
 const {DeviceIDByQR} = require("../database/repositories/ScooterRepo");
 var router = express.Router();
+
+
+router.get('/', async function (req, res, next) {
+    let devices = await GetAllDevices()
+    res.json({
+        success: true,
+        devices
+    })
+})
 
 /* GET home page. */
 router.post('/command', async function(req, res, next) {

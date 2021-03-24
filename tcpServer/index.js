@@ -67,6 +67,7 @@ server.on('connection', function(sock) {
 
                     if((parsed.command.XX === 'L0' || parsed.command.XX === 'L1')) {
                         // console.log('STATE => ', parsed.command.XX)
+                        // TODO: find and register a scooter
                         scooter.initialize({state: parsed.command.XX}).then(resp => {
                             log(chalk.black.bgGreen.bold(` ${scooter.DEVICE_ID} `) + ' ' + chalk.green(' READY!! '));
                         })
