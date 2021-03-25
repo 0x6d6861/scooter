@@ -14,12 +14,18 @@ subscriber.subscribe("response/scooter/information");
 
 let devices = {};
 
-// TODO: know when the command was successful
-publisher.publish('action/scooter/lock', JSON.stringify({
+/*publisher.publish('action/scooter/alarm', JSON.stringify({
     user: '1',
-    DEVICE_ID: '867584039553065',
-    state: 'LOCK'
-}))
+    DEVICE_ID: '861123050543063',
+    state: '0'
+}));*/
+
+// TODO: know when the command was successful
+/*publisher.publish('action/scooter/lock', JSON.stringify({
+    user: '1',
+    DEVICE_ID: '861123050543063',
+    state: 'UNLOCK'
+}))*/
 
 /*publisher.publish('action/scooter/trackinginterval', JSON.stringify({
     user: '1',

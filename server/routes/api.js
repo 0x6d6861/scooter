@@ -15,7 +15,7 @@ router.get('/devices', async function (req, res, next) {
 
 /* GET home page. */
 router.post('/command', async function(req, res, next) {
-    const {qr, command} = req.body;
+    const {qr, command, user} = req.body;
     let commands = ['LOCK', 'UNLOCK'];
 
     if(commands.includes(command)){
@@ -29,7 +29,7 @@ router.post('/command', async function(req, res, next) {
 
         // TODO: get userID from the jwt
         publisher.publish('action/scooter/lock', JSON.stringify({
-            user: '1',
+            user: user,
             DEVICE_ID: device,
             state: command
         }));
