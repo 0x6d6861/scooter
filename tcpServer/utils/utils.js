@@ -41,7 +41,7 @@ function sendCommand({DEVICE_ID = '123456789123456', XX = 'R0', DDDD = '0,20,123
         socket.write(command, () => {
             socket.on('data', function(data) {
                 let parsed = describeCommand({command: data.toString('utf8')});
-                // console.log("PARSED", parsed)
+                console.log(`===> ${socket.DEVICE_ID} - ${finalCommand}`)
                 return resolve(parsed)
             })
         })
